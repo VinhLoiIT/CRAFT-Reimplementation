@@ -38,10 +38,10 @@ class CRAFT(nn.Module):
         """ Base network """
         self.basenet = MobileNet(pretrained, freeze)
         """ U network """
-        self.upconv1 = double_conv(96 + 96, 32)
-        self.upconv2 = double_conv(32 + 32, 24)
-        self.upconv3 = double_conv(24 + 24, 32)
-        self.upconv4 = double_conv(32 + 32, 32)
+        self.upconv1 = double_conv(96, 96, 32)
+        self.upconv2 = double_conv(32, 32, 24)
+        self.upconv3 = double_conv(24, 24, 32)
+        self.upconv4 = double_conv(32, 32, 32)
 
         num_class = 2
         self.conv_cls = nn.Sequential(
