@@ -9,10 +9,23 @@ import torch.nn as nn
 import torch.nn.functional as F
 from collections import OrderedDict
 import torch.nn.init as init
-from torchutil import *
 
 from basenet.mobilenetv2 import MobileNet
 from basenet.resnet34 import Resnet34
+
+
+def init_weights(modules):
+    for m in modules:
+        if isinstance(m, nn.Conv2d):
+            init.xavier_uniform_(m.weight.data)
+            if m.bias is not None:
+                m.bias.data.zero_()
+        elif isinstance(m, nn.BatchNorm2d):
+            m.weight.data.fill_(1)
+            m.bias.data.zero_()
+        elif isinstance(m, nn.Linear):
+            m.weight.data.normal_(0, 0.01)
+            m.bias.data.zero_()
 
 
 class double_conv(nn.Module):
@@ -58,6 +71,12 @@ class CRAFT(nn.Module):
             nn.Conv2d(16, 16, kernel_size=1), nn.ReLU(inplace=True),
             nn.Conv2d(16, num_class, kernel_size=1),
         )
+
+        init_weights(self.upconv1.modules())
+        init_weights(self.upconv2.modules())
+        init_weights(self.upconv3.modules())
+        init_weights(self.upconv4.modules())
+        init_weights(self.conv_cls.modules())
 
     def forward(self, x):
         """ Base network """
