@@ -11,8 +11,8 @@ class Resnet34(torch.nn.Module):
         super().__init__()
         backbone = nn.Sequential(*list(models.resnet34(pretrained).children())[:-2-1]) # drop last block as in VGG
 
-        self.slice1 = torch.nn.Sequential(*backbone[:4])    # [B, 64,   H/2,   W/2]
-        self.slice2 = torch.nn.Sequential(*backbone[4:5])   # [B, 64,   H/4,   W/4]
+        self.slice1 = torch.nn.Sequential(*backbone[:3])    # [B, 64,   H/2,   W/2]
+        self.slice2 = torch.nn.Sequential(*backbone[3:5])   # [B, 64,   H/4,   W/4]
         self.slice3 = torch.nn.Sequential(*backbone[5:6])   # [B, 128,  H/8,   W/8]
         self.slice4 = torch.nn.Sequential(*backbone[6:])    # [B, 256,  H/16,  W/16]
 
