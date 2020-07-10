@@ -12,6 +12,7 @@ import torch.nn.init as init
 from torchutil import *
 
 from basenet.mobilenetv2 import MobileNet
+from basenet.resnet34 import Resnet34
 
 
 class double_conv(nn.Module):
@@ -36,12 +37,18 @@ class CRAFT(nn.Module):
         super().__init__()
 
         """ Base network """
-        self.basenet = MobileNet(pretrained, freeze)
+        # self.basenet = MobileNet(pretrained, freeze)
+        self.basenet = Resnet34(pretrained, freeze)
         """ U network """
-        self.upconv1 = double_conv(96, 96, 32)
-        self.upconv2 = double_conv(32, 32, 24)
-        self.upconv3 = double_conv(24, 24, 32)
-        self.upconv4 = double_conv(32, 32, 32)
+        # self.upconv1 = double_conv(96, 96, 32)
+        # self.upconv2 = double_conv(32, 32, 24)
+        # self.upconv3 = double_conv(24, 24, 32)
+        # self.upconv4 = double_conv(32, 32, 32)
+
+        self.upconv1 = double_conv(512, 256, 256)
+        self.upconv2 = double_conv(256, 128, 128)
+        self.upconv3 = double_conv(128, 64, 64)
+        self.upconv4 = double_conv(64, 64, 32)
 
         num_class = 2
         self.conv_cls = nn.Sequential(
